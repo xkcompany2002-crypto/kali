@@ -1,0 +1,15 @@
+{
+  "name": "xk-trade-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A read-only market research chat with an isolated public browser.",
+  "packageManager": "npm@10.9.2",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "playwright-core": "1.64.1"
+  }
+}

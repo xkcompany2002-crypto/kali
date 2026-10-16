@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: xk-trade-bot
+    runtime: docker
+    region: frankfurt
+    plan: free
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: TOKEN_HARBOR_API_KEY
+        sync: false
+      - key: TOKEN_HARBOR_MODEL
+        value: claude-haiku-5.5:free
+      - key: TOKEN_HARBOR_URL
+        value: https://tokenharbor.ai/v1/chat/completions

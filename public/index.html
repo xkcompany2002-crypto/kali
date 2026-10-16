@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#081516" />
+    <meta name="description" content="A focused market research chat with an isolated live browser." />
+    <title>XK-TRADE-BOT — Research workspace</title>
+    <link rel="icon" type="image/svg+xml" href="/market-lens-mark.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Workspace navigation">
+        <a class="brand" href="/" aria-label="XK-TRADE-BOT home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none"><path d="M5 23.5 11.2 17l4.5 3.6L26.5 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.7 9h5.8v5.8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="brand-copy"><strong>XK-TRADE-BOT</strong><small>RESEARCH WORKSPACE</small></span>
+        </a>
+
+        <button class="new-chat-button" id="new-chat" type="button"><span aria-hidden="true">＋</span> New analysis</button>
+
+        <div class="sidebar-section">
+          <p class="sidebar-label">QUICK START</p>
+          <button class="sidebar-link" data-prompt="Build a research framework for a public company. Start by asking which ticker I want to examine."><span class="sidebar-icon" aria-hidden="true">◈</span> Company snapshot</button>
+          <button class="sidebar-link" data-prompt="Search current public sources for a market-news catalyst, then explain what is confirmed and what still needs checking."><span class="sidebar-icon" aria-hidden="true">↗</span> Review a catalyst</button>
+          <button class="sidebar-link" data-prompt="Give me a balanced framework for comparing two public companies in the same sector."><span class="sidebar-icon" aria-hidden="true">⇄</span> Compare companies</button>
+        </div>
+
+        <div class="sidebar-section conversation-history-section">
+          <div class="history-heading"><p class="sidebar-label">SAVED CONVERSATIONS</p><button id="clear-history" class="history-clear-button" type="button" title="Delete all saved conversations">Clear</button></div>
+          <div id="conversation-history" class="conversation-history" aria-label="Saved conversations"><p class="history-empty">Your analyses will appear here.</p></div>
+        </div>
+
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-note">
+          <span class="live-dot" aria-hidden="true"></span>
+          <div><strong>Research only</strong><small>No trades or account actions.</small></div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-avatar" aria-hidden="true">XK</div>
+          <div class="profile-text"><strong>Public demo</strong><small>Chats saved on this device</small></div>
+          <span class="profile-menu" aria-hidden="true">•••</span>
+        </div>
+        <div class="brand-credit" role="note" aria-label="Powered by XK-Company" title="Powered by XK-Company">
+          <span class="brand-credit-prefix">Powered by</span>
+          <strong>XK-Company</strong>
+          <span class="brand-credit-compact" aria-hidden="true">XK</span>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>Workspace</span><span class="crumb-slash">/</span><strong id="active-conversation-title">New analysis</strong></div>
+          <div class="topbar-status" aria-live="polite">
+            <button type="button" class="mobile-history-open" id="mobile-history-open">History</button>
+            <label class="model-picker"><span class="sr-only">AI model</span><select id="model-select" aria-label="AI model"><option value="claude-haiku-5.5:free">Claude Haiku 5.5 · Free</option><option value="deepseek-v4.1-flash:free">DeepSeek V4.1 Flash · Free</option><option value="mimo-v2.6-flash:free">MiMo V2.6 Flash · Free</option><option value="deepseek-v4-flash:free">DeepSeek V4 Flash · Free</option></select></label>
+            <span class="status-pill" id="ai-status"><span class="status-dot"></span><span>Checking AI…</span></span>
+            <span class="status-pill status-muted" id="web-status"><span class="status-dot"></span><span>Browser starting…</span></span>
+          </div>
+        </header>
+
+        <div class="mobile-tabs" role="tablist" aria-label="Workspace panels">
+          <button class="mobile-tab is-active" type="button" role="tab" aria-selected="true" data-panel="chat-column">Chat</button>
+          <button class="mobile-tab" type="button" role="tab" aria-selected="false" data-panel="browser-panel">Live browser</button>
+        </div>
+
+        <div class="workspace-grid">
+          <section class="chat-column is-active" id="chat-column" aria-label="Market research conversation">
+            <div class="chat-scroll" id="chat-scroll">
+              <div class="welcome-block" id="welcome-block">
+                <div class="eyebrow"><span class="eyebrow-line"></span> MARKET RESEARCH, WITHOUT THE NOISE</div>
+                <h1>Read the market<br /><span>with more context.</span></h1>
+                <p class="welcome-copy">Ask about a company, a catalyst, or a market theme. We’ll separate what’s known from what still needs checking.</p>
+
+                <form class="ticker-analyzer" id="ticker-analyzer" aria-label="Analyze a stock ticker">
+                  <div class="ticker-form-copy"><span class="ticker-form-mark" aria-hidden="true">↗</span><div><strong>Analyze a ticker</strong><small>Price history · scored technical evidence · catalyst checks</small></div></div>
+                  <div class="ticker-form-fields">
+                    <label class="ticker-input-wrap"><span>Ticker</span><input id="ticker-input" name="ticker" type="text" maxlength="15" placeholder="e.g. JBDI" autocomplete="off" spellcheck="false" required /></label>
+                    <label class="horizon-input-wrap"><span>Horizon</span><select id="analysis-horizon" name="horizon"><option value="next 1–5 trading days">Swing · 1–5 days</option><option value="next 2–6 weeks">Short term · 2–6 weeks</option><option value="next 3–12 months">Long term · 3–12 months</option></select></label>
+                    <button type="submit" id="analyze-ticker-button"><span>Analyze</span><span aria-hidden="true">↗</span></button>
+                  </div>
+                  <p class="ticker-form-footnote">Evidence score ≠ win probability. Historical hit rate is not a guarantee; data can be delayed.</p>
+                </form>
+
+                <div class="suggestion-grid" id="suggestions" aria-label="Suggested questions">
+                  <button class="suggestion-card" data-prompt="Build a research checklist for analyzing a public company."><span class="suggestion-icon icon-teal" aria-hidden="true">⌕</span><span><strong>Start with a company</strong><small>Build a clear research checklist</small></span><span class="suggestion-arrow" aria-hidden="true">↗</span></button>
+                  <button class="suggestion-card" data-prompt="Search for a recent public news catalyst for the company I name, open the best source, and explain the evidence and risks."><span class="suggestion-icon icon-amber" aria-hidden="true">◷</span><span><strong>Review a catalyst</strong><small>Check current public sources</small></span><span class="suggestion-arrow" aria-hidden="true">↗</span></button>
+                  <button class="suggestion-card" data-prompt="Give me a balanced framework for comparing two companies in the same sector."><span class="suggestion-icon icon-blue" aria-hidden="true">⇄</span><span><strong>Compare two names</strong><small>Look at evidence and trade-offs</small></span><span class="suggestion-arrow" aria-hidden="true">↗</span></button>
+                </div>
+                <div class="freshness-note"><span class="info-icon" aria-hidden="true">i</span><span>Daily price history and public-web research are available; quote freshness varies by source.</span></div>
+              </div>
+
+              <div class="message-list" id="message-list" aria-live="polite"></div>
+              <div class="typing-row" id="typing-row" hidden><div class="assistant-avatar" aria-hidden="true">M</div><div class="typing-bubble"><span></span><span></span><span></span><small id="typing-label">Thinking through your question</small></div></div>
+              <div class="error-row" id="error-row" hidden role="alert"></div>
+            </div>
+
+            <form class="composer-wrap" id="chat-form" aria-label="Ask XK-TRADE-BOT">
+              <div class="attachment-tray" id="attachment-tray" hidden aria-label="Images to attach"></div>
+              <label class="sr-only" for="message-input">Message XK-TRADE-BOT</label>
+              <div class="composer">
+                <textarea id="message-input" rows="1" maxlength="4000" placeholder="Ask about a company, catalyst, or market theme…" autocomplete="off"></textarea>
+                <div class="composer-actions">
+                  <div class="composer-tools">
+                    <button class="tool-button" id="attach-button" type="button" aria-label="Attach images" title="Attach images">
+                      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8.5 12.5 14.8 6.2a3.1 3.1 0 0 1 4.4 4.4l-8.8 8.8a5 5 0 0 1-7.1-7.1l8.1-8.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.4 15.6 16 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                    </button>
+                    <span class="composer-hint" id="composer-hint">Attach up to 3 images · Enter to send</span>
+                    <span class="hint-separator">·</span><span class="composer-hint">Shift + Enter for a new line</span>
+                    <span class="image-count" id="image-count" hidden></span>
+                  </div>
+                  <button class="send-button" id="send-button" type="submit" disabled aria-label="Send message" title="Send message">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+              <input class="sr-only" id="image-input" type="file" accept="image/jpeg,image/png,image/gif,image/webp" multiple />
+              <p class="composer-disclaimer">Private to this browser’s local storage only; messages and images may be sent to the AI provider. Attachments are not saved in conversation history. Verify all investment claims.</p>
+            </form>
+          </section>
+
+          <aside class="browser-panel" id="browser-panel" aria-label="Live browser">
+            <div class="browser-panel-heading">
+              <div class="browser-title-group"><span class="browser-spark" aria-hidden="true">◉</span><div><span class="panel-kicker">LIVE BROWSER</span><h2>Research view</h2></div></div>
+              <span class="browser-status" id="browser-agent-status"><i></i><span>Ready</span></span>
+            </div>
+            <form class="address-bar" id="browser-form">
+              <label class="sr-only" for="browser-address">Search or enter a public URL</label>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6" stroke="currentColor" stroke-width="1.7"/><path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              <input id="browser-address" type="text" placeholder="Search or enter a public URL" autocomplete="off" spellcheck="false" />
+              <button type="submit" id="browser-open">Open</button>
+            </form>
+            <div class="browser-controls">
+              <button type="button" id="browser-back" aria-label="Go back" title="Go back">←</button>
+              <button type="button" id="browser-reload" aria-label="Reload page" title="Reload page">↻</button>
+              <button class="manual-control-button" type="button" id="browser-control-toggle" aria-pressed="false" disabled title="Enable safe mouse control">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5.5 3.5 13 11.2-6.2.7-3 5.1L5.5 3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m12 15.4 3.2 4.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <span id="browser-control-label">Mouse off</span>
+              </button>
+              <span class="browser-controls-note">HTTPS links only · read-only</span>
+            </div>
+            <div class="browser-viewport">
+              <iframe id="browser-frame" title="Live public webpage view" src="/browser-view.html" loading="eager" referrerpolicy="no-referrer"></iframe>
+            </div>
+            <div class="browser-footer">
+              <span class="browser-lock" aria-hidden="true">◈</span>
+              <div class="browser-page-info"><strong id="browser-page-title">No page open</strong><small id="browser-current-url">Search or enter a public web address.</small></div>
+              <span class="session-badge">TEMPORARY</span>
+            </div>
+            <div class="browser-error" id="browser-error" hidden role="alert"></div>
+            <p class="browser-safety-note">HTTPS reading only. Mouse moves, scrolls, and public links are allowed; no keyboard, buttons, forms, downloads, logins, or transactions. CAPTCHA and paywalls are not bypassed.</p>
+          </aside>
+        </div>
+      </main>
+    </div>
+    <div class="history-dialog" id="history-dialog" hidden>
+      <button type="button" class="history-dialog-scrim" data-history-close aria-label="Close saved conversations"></button>
+      <section class="history-dialog-panel" role="dialog" aria-modal="true" aria-labelledby="history-dialog-title">
+        <header class="history-dialog-header"><div><strong id="history-dialog-title">Saved conversations</strong><small>Stored only in this browser</small></div><button id="mobile-history-close" type="button" aria-label="Close history">×</button></header>
+        <div id="mobile-conversation-history" class="conversation-history mobile-conversation-history" aria-label="Saved conversations"></div>
+        <button type="button" class="history-dialog-clear" id="mobile-clear-history">Delete all saved conversations</button>
+      </section>
+    </div>
+  </body>
+</html>

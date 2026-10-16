@@ -1,0 +1,16 @@
+node_modules
+.git
+.env
+.env.*
+!.env.example
+*.zip
+coverage
+playwright-report
+test-results
+test
+.github
+/README.md
+/DEPLOY.md
+/REVIEW_NOTES.md
+/TODO.md
+/plan.md
