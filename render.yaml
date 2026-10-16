@@ -10,6 +10,6 @@ services:
       - key: TOKEN_HARBOR_API_KEY
         sync: false
       - key: TOKEN_HARBOR_MODEL
-        value: claude-haiku-5.5:free
+        value: deepseek-v4.1-flash:free
       - key: TOKEN_HARBOR_URL
         value: https://tokenharbor.ai/v1/chat/completions
