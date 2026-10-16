@@ -17,14 +17,14 @@ jobs:
         run: |
           set -euo pipefail
           test -f project-package/READY
-          test "$(find project-package -maxdepth 1 -name 'part-*.b64' | wc -l)" -eq 5
-          tr -d '\r\n ' < <(cat project-package/part-*.b64) | base64 -d > /tmp/xk-source.zip
-          unzip -tq /tmp/xk-source.zip
+          test "$(find project-package -maxdepth 1 -name 'part-*.b64' | wc -l)" -eq 10
+          cat project-package/part-*.b64 | tr -d '\r\n ' | base64 -d > /tmp/xk-source.tar.xz
+          tar -tJf /tmp/xk-source.tar.xz >/dev/null
           mkdir -p /tmp/xk-package
-          unzip -q /tmp/xk-source.zip -d /tmp/xk-package
+          tar -xJf /tmp/xk-source.tar.xz -C /tmp/xk-package
           test -d /tmp/xk-package/xk_trade_next
           cp -a /tmp/xk-package/xk_trade_next/. .
-          rm -rf project-package /tmp/xk-package /tmp/xk-source.zip
+          rm -rf project-package /tmp/xk-package /tmp/xk-source.tar.xz
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
