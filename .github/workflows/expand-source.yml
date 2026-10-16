@@ -1,0 +1,31 @@
+name: Expand XK-TRADE-BOT source package
+on:
+  push:
+    branches: [main]
+    paths: [project.zip]
+permissions:
+  contents: write
+jobs:
+  expand-source:
+    if: ${{ github.event_name == 'push' && hashFiles('project.zip') != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Expand source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f project.zip
+          mkdir -p /tmp/xk-package
+          unzip -q project.zip -d /tmp/xk-package
+          test -d /tmp/xk-package/xk_trade_next
+          cp -a /tmp/xk-package/xk_trade_next/. .
+          rm -f project.zip
+          rm -rf /tmp/xk-package
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Expand XK-TRADE-BOT source package"
+          git push
