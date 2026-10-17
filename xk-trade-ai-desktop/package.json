@@ -29,6 +29,7 @@
       "allowToChangeInstallationDirectory": false,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
+      "runAfterFinish": false,
       "shortcutName": "XK Trade AI"
     }
   }
