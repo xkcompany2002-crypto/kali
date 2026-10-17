@@ -1,0 +1,35 @@
+{
+  "name": "xk-trade-ai-desktop",
+  "version": "1.0.0",
+  "description": "XK Trade AI desktop app for Finnhub and DeepSeek V4.1 Flash through Token Harbor",
+  "main": "main.js",
+  "author": "XK Technologies",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win nsis portable"
+  },
+  "devDependencies": {
+    "electron": "^39.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.xktechnologies.xktradeai",
+    "productName": "XK Trade AI",
+    "asar": true,
+    "directories": { "output": "release" },
+    "files": ["main.js", "preload.js", "index.html", "renderer.js", "styles.css", "package.json"],
+    "win": {
+      "target": ["nsis", "portable"],
+      "artifactName": "XK-Trade-AI-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "XK Trade AI"
+    }
+  }
+}
