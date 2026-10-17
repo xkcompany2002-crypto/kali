@@ -1,0 +1,33 @@
+name: Build generic XK Trade AI one-file wrapper
+
+on:
+  push:
+    branches: [build-xk-trade-ai-desktop]
+    paths:
+      - "xk-trade-ai-desktop/onefile-wrapper/**"
+      - ".github/workflows/build-xk-onefile-wrapper.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-wrapper:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile generic wrapper (no API keys included)
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path release | Out-Null
+          $csc = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          if (!(Test-Path $csc)) { throw "C# compiler not found: $csc" }
+          & $csc /nologo /target:winexe /platform:anycpu /optimize+ /out:release\XK-Trade-AI-OneFile-Wrapper.exe /reference:System.Windows.Forms.dll /reference:System.IO.Compression.dll /reference:System.IO.Compression.FileSystem.dll xk-trade-ai-desktop\onefile-wrapper\Bootstrapper.cs
+          if ($LASTEXITCODE -ne 0) { throw "C# compilation failed with exit code $LASTEXITCODE" }
+          if (!(Test-Path release\XK-Trade-AI-OneFile-Wrapper.exe)) { throw "Wrapper output was not created" }
+      - name: Upload generic wrapper executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: XK-Trade-AI-OneFile-Wrapper-Base
+          path: release/XK-Trade-AI-OneFile-Wrapper.exe
+          retention-days: 7
