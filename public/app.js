@@ -603,7 +603,7 @@ async function requestReply(history) {
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: serializeHistory(history), browserSessionId, model: modelSelect?.value || 'claude-haiku-5.5:free' }),
+      body: JSON.stringify({ messages: serializeHistory(history), browserSessionId, model: modelSelect?.value || 'deepseek-v4.1-flash:free' }),
     });
     const contentType = response.headers.get('content-type') || '';
     if (!response.ok || !contentType.includes('text/event-stream')) {
