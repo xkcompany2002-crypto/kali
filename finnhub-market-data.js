@@ -100,6 +100,8 @@ function makeFinnhubSnapshot(ticker, payload) {
   snapshot.source = 'Finnhub Stock Candles and Quote API';
   snapshot.sourceUrl = 'https://finnhub.io/docs/api/stock-candles';
   snapshot.marketDataTimestamp = new Date(regularMarketTime * 1000).toISOString();
+  if (quote && Number.isFinite(quote.pc) && quote.pc > 0) snapshot.previousDailyClose = quote.pc;
+  if (quote && Number.isFinite(quote.dp)) snapshot.priceVsPreviousClosePercent = quote.dp;
   snapshot.providerQuote = quote ? {
     currentPrice: quote.c,
     change: Number.isFinite(quote.d) ? quote.d : null,
