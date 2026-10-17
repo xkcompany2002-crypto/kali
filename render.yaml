@@ -9,6 +9,8 @@ services:
     envVars:
       - key: TOKEN_HARBOR_API_KEY
         sync: false
+      - key: FINNHUB_API_KEY
+        sync: false
       - key: TOKEN_HARBOR_MODEL
         value: deepseek-v4.1-flash:free
       - key: TOKEN_HARBOR_URL
