@@ -53,7 +53,7 @@ internal static class Bootstrapper
             Process seed = Process.Start(new ProcessStartInfo
             {
                 FileName = Environment.GetEnvironmentVariable("ComSpec") ?? "cmd.exe",
-                Arguments = "/d /c \"\"" + seedScript + "\""",
+                Arguments = "/d /c \"\"" + seedScript + "\"\"",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 WorkingDirectory = tempRoot
