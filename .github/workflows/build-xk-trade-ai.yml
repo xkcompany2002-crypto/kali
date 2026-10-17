@@ -1,0 +1,44 @@
+name: Build XK Trade AI Windows Installer
+
+on:
+  push:
+    branches: [build-xk-trade-ai-desktop]
+    paths:
+      - "xk-trade-ai-desktop/**"
+      - ".github/workflows/build-xk-trade-ai.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: xk-trade-ai-desktop
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: xk-trade-ai-desktop/package.json
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Check JavaScript syntax
+        run: |
+          node --check main.js
+          node --check preload.js
+          node --check renderer.js
+      - name: Build installer and portable application
+        run: npm run build:win
+      - name: Upload Windows EXE files
+        uses: actions/upload-artifact@v4
+        with:
+          name: XK-Trade-AI-Windows
+          path: xk-trade-ai-desktop/release/*.exe
+          if-no-files-found: error
+          retention-days: 14
