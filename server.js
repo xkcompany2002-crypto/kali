@@ -333,7 +333,7 @@ async function executeTool(toolCall, sessionId) {
     switch (name) {
       case 'market_snapshot': {
         try { return await getMarketSnapshot(args.ticker); }
-        catch (error) { return { error: (error?.message || 'Market data could not be loaded.').slice(0, 220), ticker: typeof args.ticker === 'string' ? args.ticker.slice(0, 15) : null, source: 'Yahoo Finance chart endpoint' }; }
+        catch (error) { return { error: (error?.message || 'Market data could not be loaded.').slice(0, 220), ticker: typeof args.ticker === 'string' ? args.ticker.slice(0, 15) : null, source: 'Finnhub Stock Candles and Quote API' }; }
       }
       case 'browser_search': return await Browser.search(sessionId, args.query);
       case 'browser_open': return await Browser.open(sessionId, args.url);
