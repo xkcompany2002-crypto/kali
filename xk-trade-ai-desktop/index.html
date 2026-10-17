@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XK Trade AI</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="logo">XK</div><div><b>XK Trade AI</b><small>MARKET INTELLIGENCE</small></div></div>
+  <div class="top-actions"><span class="model">DeepSeek V4.1 Flash</span><button id="settingsBtn" class="ghost">الإعدادات ⚙</button></div>
+</header>
+<main>
+  <section class="hero">
+    <div class="eyebrow"><span class="dot"></span> بيانات السوق + تحليل ذكي</div>
+    <h1>اقرأ السوق بوضوح.</h1>
+    <p>بيانات Finnhub، وتحليل عربي عبر DeepSeek V4.1 Flash باستخدام Token Harbor.</p>
+    <form id="analyzeForm" class="search">
+      <div class="search-input"><label for="symbol">رمز السهم</label><input id="symbol" value="AAPL" maxlength="16" autocomplete="off" spellcheck="false" placeholder="AAPL أو NVDA" required></div>
+      <button id="analyzeBtn" type="submit" class="primary">حلّل السهم <span>↗</span></button>
+    </form>
+    <div class="quick"><span>جرّب:</span><button data-symbol="AAPL">AAPL</button><button data-symbol="NVDA">NVDA</button><button data-symbol="MSFT">MSFT</button><button data-symbol="TSLA">TSLA</button></div>
+    <div id="status" class="status hidden"></div>
+    <div id="error" class="error hidden"></div>
+  </section>
+  <section id="market" class="panel hidden">
+    <div class="section-head"><div><span class="eyebrow">MARKET SNAPSHOT</span><h2 id="company">—</h2><small id="companyMeta">—</small></div><span id="ticker" class="ticker">—</span></div>
+    <div class="price-main"><div><small>السعر الحالي</small><h2 id="price">—</h2></div><strong id="change">—</strong></div>
+    <div class="metrics">
+      <div><small>أعلى سعر اليوم</small><b id="high">—</b></div><div><small>أدنى سعر اليوم</small><b id="low">—</b></div><div><small>الإغلاق السابق</small><b id="prev">—</b></div><div><small>وقت الاسترجاع</small><b id="retrieved">—</b></div>
+    </div>
+  </section>
+  <section id="analysisPanel" class="panel hidden">
+    <div class="section-head"><div><span class="eyebrow">AI RESEARCH</span><h2>تقرير التحليل</h2></div><span class="pill">تحليل معلوماتي</span></div>
+    <div id="analysis" class="analysis-text"></div>
+    <div class="news-head"><h3>أخبار الشركة</h3><small id="newsPeriod"></small></div>
+    <div id="news" class="news-list"></div>
+    <button id="copyBtn" class="ghost copy">نسخ التقرير</button>
+  </section>
+  <footer>مصدر البيانات: Finnhub · النموذج: deepseek-v4.1-flash:free · النتائج ليست توصية استثمارية.</footer>
+</main>
+
+<div id="settingsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div class="dialog">
+    <div class="section-head"><div><span class="eyebrow">LOCAL CONFIGURATION</span><h2 id="settingsTitle">إعدادات الاتصال</h2></div><button id="closeSettings" class="icon-btn" aria-label="إغلاق">✕</button></div>
+    <p class="muted">تُحفظ المفاتيح مشفّرة محليًا على Windows. لا ترفعها إلى GitHub ولا تشارك ملفات إعدادات التطبيق.</p>
+    <form id="settingsForm">
+      <label for="finnhubKey">مفتاح Finnhub</label><input id="finnhubKey" type="password" autocomplete="off" placeholder="أدخل مفتاح Finnhub">
+      <div id="finnhubStatus" class="key-status">لم يُتحقق بعد</div>
+      <label for="harborKey">مفتاح Token Harbor (DeepSeek)</label><input id="harborKey" type="password" autocomplete="off" placeholder="أدخل مفتاح Token Harbor">
+      <div id="harborStatus" class="key-status">لم يُتحقق بعد</div>
+      <label for="style">أسلوب التحليل</label><select id="style"><option value="balanced">متوازن</option><option value="technical">فني</option><option value="news">الأخبار</option><option value="conservative">متحفظ</option></select>
+      <label for="newsDays">عدد أيام الأخبار</label><select id="newsDays"><option value="3">آخر 3 أيام</option><option value="7" selected>آخر 7 أيام</option><option value="14">آخر 14 يومًا</option><option value="30">آخر 30 يومًا</option></select>
+      <label for="instructions">تعليمات مخصصة (اختياري)</label><textarea id="instructions" rows="3" maxlength="2000" placeholder="مثال: ركّز على مخاطر السيولة والأخبار المؤثرة."></textarea>
+      <div id="settingsError" class="error hidden"></div><div id="settingsSuccess" class="success hidden"></div>
+      <div class="dialog-actions"><button id="saveSettings" type="submit" class="primary">حفظ الإعدادات</button><button type="button" id="cancelSettings" class="ghost">إغلاق</button></div>
+      <div class="clear-row"><button type="button" data-clear="finnhub" class="danger-link">مسح مفتاح Finnhub</button><button type="button" data-clear="tokenharbor" class="danger-link">مسح مفتاح Token Harbor</button></div>
+    </form>
+  </div>
+</div>
+<script src="renderer.js"></script>
+</body>
+</html>
