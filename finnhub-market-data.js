@@ -13,12 +13,14 @@ async function fetchFinnhubJson(endpoint, params, apiKey) {
   for (const [key, value] of Object.entries(params)) {
     url.searchParams.set(key, String(value));
   }
-  url.searchParams.set('token', apiKey);
-
   let response;
   try {
     response = await fetch(url, {
-      headers: { Accept: 'application/json', 'User-Agent': 'XK-TRADE-BOT/1.2' },
+      headers: {
+        Accept: 'application/json',
+        'User-Agent': 'XK-TRADE-BOT/1.2',
+        'X-Finnhub-Token': apiKey,
+      },
       signal: AbortSignal.timeout(12_000),
       redirect: 'error',
     });
