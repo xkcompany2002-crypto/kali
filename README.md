@@ -6,19 +6,20 @@ A read-only, evidence-led market research assistant with an isolated public-web 
 
 - Node.js 22+
 - Chromium (or use the included Docker image)
-- Optional Token Harbor API key for live model responses
-- The default general-analysis route is Claude Haiku 5.5 Free; DeepSeek V4.1 Flash Free is available for tool-heavy research, with DeepSeek V4 Flash and MiMo V2.6 Flash as additional choices. Free model identifiers, allowance, and availability can change; confirm the current Token Harbor catalog before relying on a route.
+- `TOKEN_HARBOR_API_KEY` for live AI responses
+- `FINNHUB_API_KEY` for market data
+- The default model is DeepSeek V4.1 Flash Free (`deepseek-v4.1-flash:free`); Claude Haiku 5.5 Free, DeepSeek V4 Flash Free, and MiMo V2.6 Flash Free remain selectable. Free model identifiers, allowance, and availability can change; confirm the current Token Harbor catalog before relying on a route.
 
 ## Run locally
 
 ```bash
 npm ci
 cp .env.example .env
-# Add TOKEN_HARBOR_API_KEY to .env only after creating a fresh, valid key. A key shared in a chat should be revoked first.
+# Add fresh TOKEN_HARBOR_API_KEY and FINNHUB_API_KEY values to .env. Keep them secret.
 npm start
 ```
 
-Open `http://localhost:3000`. Without the API key, the chat uses clearly labeled demo responses. The isolated browser starts on demand and needs a working Chromium binary.
+Open `http://localhost:3000`. Without TOKEN_HARBOR_API_KEY, the chat uses clearly labeled demo responses. Without FINNHUB_API_KEY, ticker market-data lookups will explain that Finnhub is not configured. The isolated browser starts on demand and needs a working Chromium binary.
 
 ## Test
 
@@ -33,7 +34,7 @@ node --check public/browser-view.js
 
 ## Deploy
 
-Use a container-capable Node host (for example, Render Web Service with Docker, Railway, Fly.io, Koyeb, or a VPS). GitHub Pages/static hosting is not sufficient because browser automation needs a Node server and Chromium. Configure `/health` as the health-check path and set `TOKEN_HARBOR_API_KEY` in the host's secret/environment settings—not in source files. See [DEPLOY.md](DEPLOY.md).
+Use a container-capable Node host (for example, Render Web Service with Docker, Railway, Fly.io, Koyeb, or a VPS). GitHub Pages/static hosting is not sufficient because browser automation needs a Node server and Chromium. Configure `/health` as the health-check path and set both `TOKEN_HARBOR_API_KEY` and `FINNHUB_API_KEY` in the host's secret/environment settings—not in source files. See [DEPLOY.md](DEPLOY.md).
 
 ## Evidence score and historical check
 
@@ -45,7 +46,7 @@ Use a container-capable Node host (for example, Render Web Service with Docker, 
 ## Privacy and public deployment
 
 - When a live API key is configured, chat text and attached images are sent to the configured Token Harbor-compatible endpoint and processed by the selected model provider. Review the provider terms before enabling live mode.
-- The included Render Blueprint prompts for `TOKEN_HARBOR_API_KEY` as a secret; never commit it. A deployment without the secret starts in demo mode. Free routes avoid usage billing according to Token Harbor, but an unrestricted public app can still exhaust its shared free allowance, so add access controls and monitoring before wider launch.
+- The included Render Blueprint prompts for `TOKEN_HARBOR_API_KEY` and `FINNHUB_API_KEY` as secrets; never commit them. A deployment without the secret starts in demo mode. Free routes avoid usage billing according to Token Harbor, but an unrestricted public app can still exhaust its shared free allowance, so add access controls and monitoring before wider launch.
 - Conversation history is stored in localStorage in the current browser, not on the server; images are intentionally excluded from saved history. Clearing browser data will remove it. This is not an authenticated private workspace.
 - Browser sessions are temporary and public browsing is restricted to read-only access to public HTTPS pages.
 
