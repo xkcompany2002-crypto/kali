@@ -1,0 +1,8 @@
+node_modules/
+release/
+dist/
+.env
+.env.*
+*.key
+*.pem
+settings.enc
