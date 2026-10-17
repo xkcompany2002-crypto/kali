@@ -7,7 +7,7 @@ const fs = require('node:fs/promises');
 const MODEL = 'deepseek-v4.1-flash:free';
 const HARBOR_URL = 'https://tokenharbor.ai/v1/chat/completions';
 const FINNHUB_URL = 'https://finnhub.io/api/v1';
-const DEFAULTS = { finnhubApiKey: '', tokenHarborApiKey: '', style: 'balanced', customInstructions: '', newsDays: 7 };
+const DEFAULTS = { finnhubApiKey: '', tokenHarborApiKey: '', style: 'balanced', customInstructions: DEFAULT_CUSTOM_INSTRUCTIONS, newsDays: 7 };
 let win;
 
 function settingsFile() { return path.join(app.getPath('userData'), 'settings.enc'); }
@@ -35,7 +35,7 @@ function publicSettings(s) {
     hasFinnhubKey: !!s.finnhubApiKey,
     hasTokenHarborKey: !!s.tokenHarborApiKey,
     style: s.style,
-    customInstructions: s.customInstructions,
+    customInstructions: s.customInstructions || DEFAULT_CUSTOM_INSTRUCTIONS,
     newsDays: s.newsDays,
     model: MODEL
   };
@@ -180,10 +180,15 @@ ipcMain.handle('settings:get', async () => {
   let seeded = false;
   if (envFinnhub && (force || !s.finnhubApiKey)) { s.finnhubApiKey = envFinnhub; seeded = true; }
   if (envHarbor && (force || !s.tokenHarborApiKey)) { s.tokenHarborApiKey = envHarbor; seeded = true; }
+  const marker = String(process.env.XK_TRADE_KEY_SEED_MARKER || '');
   if (seeded) await writeSettings(s);
   delete process.env.XK_FINNHUB_API_KEY;
   delete process.env.XK_TOKENHARBOR_API_KEY;
   delete process.env.XK_TRADE_FORCE_KEYS;
+  delete process.env.XK_TRADE_KEY_SEED_MARKER;
+  if (seeded && marker && marker.length < 1000) {
+    try { await fs.writeFile(marker, 'ok', { encoding: 'utf8' }); } catch {}
+  }
   return publicSettings(s);
 });
 ipcMain.handle('settings:save', async (_event, input) => {
