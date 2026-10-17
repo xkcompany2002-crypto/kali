@@ -46,7 +46,7 @@ Use a container-capable Node host (for example, Render Web Service with Docker, 
 ## Privacy and public deployment
 
 - When a live API key is configured, chat text and attached images are sent to the configured Token Harbor-compatible endpoint and processed by the selected model provider. Review the provider terms before enabling live mode.
-- The included Render Blueprint prompts for `TOKEN_HARBOR_API_KEY` and `FINNHUB_API_KEY` as secrets; never commit them. A deployment without the secret starts in demo mode. Free routes avoid usage billing according to Token Harbor, but an unrestricted public app can still exhaust its shared free allowance, so add access controls and monitoring before wider launch.
+- The included Render Blueprint prompts for `TOKEN_HARBOR_API_KEY` and `FINNHUB_API_KEY` as secrets; never commit them. Without `TOKEN_HARBOR_API_KEY`, chat stays in demo mode; without `FINNHUB_API_KEY`, ticker market-data lookups are unavailable. Free routes avoid usage billing according to Token Harbor, but an unrestricted public app can still exhaust its shared free allowance, so add access controls and monitoring before wider launch.
 - Conversation history is stored in localStorage in the current browser, not on the server; images are intentionally excluded from saved history. Clearing browser data will remove it. This is not an authenticated private workspace.
 - Browser sessions are temporary and public browsing is restricted to read-only access to public HTTPS pages.
 
