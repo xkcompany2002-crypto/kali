@@ -22,7 +22,7 @@ loadLocalEnvFile();
 
 const PORT = Number(process.env.PORT || 3000);
 const Browser = require('./browser');
-const { getMarketSnapshot } = require('./market-data');
+const { getMarketSnapshot } = require('./finnhub-market-data');
 const PUBLIC_DIR = path.join(ROOT, 'public');
 const ALLOWED_MODELS = new Map([
   ['claude-haiku-5.5:free', 'Claude Haiku 5.5 · Free · strongest general analysis'],
@@ -32,7 +32,7 @@ const ALLOWED_MODELS = new Map([
 ]);
 const DEFAULT_MODEL = ALLOWED_MODELS.has(process.env.TOKEN_HARBOR_MODEL)
   ? process.env.TOKEN_HARBOR_MODEL
-  : 'claude-haiku-5.5:free';
+  : 'deepseek-v4.1-flash:free';
 const TOKEN_HARBOR_URL = process.env.TOKEN_HARBOR_URL || 'https://tokenharbor.ai/v1/chat/completions';
 const SYSTEM_PROMPT = fs.readFileSync(path.join(ROOT, 'agent', 'system-prompt.md'), 'utf8');
 const MAX_BODY_BYTES = 16 * 1024 * 1024;
@@ -647,7 +647,8 @@ const server = http.createServer(async (req, res) => {
       configured: Boolean(process.env.TOKEN_HARBOR_API_KEY),
       model: DEFAULT_MODEL,
       models: [...ALLOWED_MODELS.entries()].map(([id, label]) => ({ id, label })),
-      marketData: 'Yahoo Finance chart endpoint',
+      marketData: 'Finnhub Stock Candles and Quote API',
+      marketDataConfigured: Boolean(process.env.FINNHUB_API_KEY),
       streaming: true,
       images: true,
       browserReady: await Browser.browserAvailable(),
