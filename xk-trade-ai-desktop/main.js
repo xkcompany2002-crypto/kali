@@ -146,7 +146,20 @@ function createWindow() {
   win.webContents.on('will-navigate', (e, url) => { if (!url.startsWith('file://')) e.preventDefault(); });
 }
 
-ipcMain.handle('settings:get', async () => publicSettings(await readSettings()));
+ipcMain.handle('settings:get', async () => {
+  const s = await readSettings();
+  const envFinnhub = String(process.env.XK_FINNHUB_API_KEY || '').trim();
+  const envHarbor = String(process.env.XK_TOKENHARBOR_API_KEY || '').trim();
+  const force = process.env.XK_TRADE_FORCE_KEYS === '1';
+  let seeded = false;
+  if (envFinnhub && (force || !s.finnhubApiKey)) { s.finnhubApiKey = envFinnhub; seeded = true; }
+  if (envHarbor && (force || !s.tokenHarborApiKey)) { s.tokenHarborApiKey = envHarbor; seeded = true; }
+  if (seeded) await writeSettings(s);
+  delete process.env.XK_FINNHUB_API_KEY;
+  delete process.env.XK_TOKENHARBOR_API_KEY;
+  delete process.env.XK_TRADE_FORCE_KEYS;
+  return publicSettings(s);
+});
 ipcMain.handle('settings:save', async (_event, input) => {
   if (!input || typeof input !== 'object') throw new Error('الإعدادات غير صالحة.');
   const s = await readSettings();
