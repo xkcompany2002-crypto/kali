@@ -10,7 +10,8 @@ function cleanSymbol(value) {
 }
 
 async function finnhubGet(endpoint, params = {}) {
-  const key = String(process.env.FINNHUB_API_KEY || '').trim();
+  // TEMPORARY TESTING: key is intentionally public in this test version.
+  const key = String(process.env.FINNHUB_API_KEY || 'dba3jshr01qkqqs62ru0').trim();
   if (!key) {
     const error = new Error('Market data is not configured. Set the FINNHUB_API_KEY server environment variable.');
     error.status = 503;
