@@ -1,0 +1,19 @@
+{
+  "name": "xk-stockstream-qwen-ready",
+  "version": "1.0.0",
+  "private": true,
+  "description": "StockStream Global with server-side Finnhub data and a Qwen-readable market research endpoint",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check api/health.js && node --check api/research.js && node --check api/v1/quote.js && node --check api/ws.js && node --check lib/finnhub.js",
+    "deploy:vercel": "vercel deploy --prod"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "ws": "^8.18.0"
+  }
+}
