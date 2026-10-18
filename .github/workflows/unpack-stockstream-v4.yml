@@ -4,7 +4,7 @@ on:
     branches:
       - build-xk-trade-ai-desktop
     paths:
-      - ".stockstream-upload/part006.b64"
+      - ".stockstream-upload/part006e.b64"
 permissions:
   contents: write
 jobs:
@@ -21,15 +21,51 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ ! -f .stockstream-upload/part006.b64 ]; then
-            echo "No staged StockStream archive; nothing to unpack."
-            exit 0
-          fi
-          for part in 001 002 003 004 005 006; do
-            test -s ".stockstream-upload/part${part}.b64"
+          for file in \
+            .stockstream-upload/part001.b64 \
+            .stockstream-upload/part002.b64 \
+            .stockstream-upload/part003.b64 \
+            .stockstream-upload/part004a.b64 \
+            .stockstream-upload/part004b1.b64 \
+            .stockstream-upload/part004b2.b64 \
+            .stockstream-upload/part004b3a.b64 \
+            .stockstream-upload/part004b3b.b64 \
+            .stockstream-upload/part004c.b64 \
+            .stockstream-upload/part004d.b64 \
+            .stockstream-upload/part005a.b64 \
+            .stockstream-upload/part005b.b64 \
+            .stockstream-upload/part005c.b64 \
+            .stockstream-upload/part005d.b64 \
+            .stockstream-upload/part005e.b64 \
+            .stockstream-upload/part006a.b64 \
+            .stockstream-upload/part006b.b64 \
+            .stockstream-upload/part006c.b64 \
+            .stockstream-upload/part006d.b64 \
+            .stockstream-upload/part006e.b64; do
+            test -s "$file"
           done
-          cat .stockstream-upload/part001.b64 .stockstream-upload/part002.b64 .stockstream-upload/part003.b64 .stockstream-upload/part004.b64 .stockstream-upload/part005.b64 .stockstream-upload/part006.b64 | base64 --decode > /tmp/xk-stockstream-v4.zip
-          echo '750bf4321eab4cac051e34b172c266d893df19010d1c5cc92ab168f1669802e1  /tmp/xk-stockstream-v4.zip' | sha256sum --check --status
+          cat \
+            .stockstream-upload/part001.b64 \
+            .stockstream-upload/part002.b64 \
+            .stockstream-upload/part003.b64 \
+            .stockstream-upload/part004a.b64 \
+            .stockstream-upload/part004b1.b64 \
+            .stockstream-upload/part004b2.b64 \
+            .stockstream-upload/part004b3a.b64 \
+            .stockstream-upload/part004b3b.b64 \
+            .stockstream-upload/part004c.b64 \
+            .stockstream-upload/part004d.b64 \
+            .stockstream-upload/part005a.b64 \
+            .stockstream-upload/part005b.b64 \
+            .stockstream-upload/part005c.b64 \
+            .stockstream-upload/part005d.b64 \
+            .stockstream-upload/part005e.b64 \
+            .stockstream-upload/part006a.b64 \
+            .stockstream-upload/part006b.b64 \
+            .stockstream-upload/part006c.b64 \
+            .stockstream-upload/part006d.b64 \
+            .stockstream-upload/part006e.b64 | base64 --decode > /tmp/xk-stockstream-v4.zip
+          echo '750bf4321eab4cac051e34b172c266d893df19010d1c5cc92ab168f1669802e1  /tmp/xk-stockstream-v4.zip' | sha256sum --check
           mkdir -p /tmp/xk-stockstream-unpack stockstream-v4
           unzip -q /tmp/xk-stockstream-v4.zip -d /tmp/xk-stockstream-unpack
           test -f /tmp/xk-stockstream-unpack/xk-stockstream-qwen-ready/package.json
